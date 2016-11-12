@@ -103,6 +103,12 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * checkPermission()というメソッド名の場合、多くは、check結果を戻り値として返すことが多いです。
+     * 理由は様々あると思っていますが、一番は、メソッドとしての役割の明確化だと考えています。
+     * 例えば、チェックする場合、結果として何かほしい場合が多いと思っています（プログラムにかぎらず）
+     * Javaはオブジェクト指向言語ですので、そのように考えることが望まれていると理解しています（伊藤は）。
+     */
     // Runtime Permission check
     private void checkPermission(){
         // 既に許可している
@@ -117,6 +123,9 @@ public class MainActivity extends AppCompatActivity {
 
     // 許可を求める
     private void requestLocationPermission() {
+        /**
+         * 条件がfalseになる場合はどんな状況の場合でしょうか？
+         */
         if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             ActivityCompat.requestPermissions(MainActivity.this,
@@ -132,12 +141,28 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // 結果の受け取り
+    /* 下記の様な JavaDoc 用のコメントを入力を心がけると業務では良いです */
+    /**
+     * 権限要求からのコールバックを継承
+     * @param requestCode   リクエストコード
+     * @param permissions   付与されるパーミッション
+     * @param grantResults  付与された結果
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        /**
+         * else文を書かなくていいのか、書いたほうがいいのかを常に意識しておくといいかもです。
+         * 今回の場合は、権限要求が一つなら書く必要がないですね。
+         *
+         * ただし、int型の requestCode が返却されるので switch文も考えてもいいと思います。
+         * 処理速度としては、ifelse文で書き続ける場合よりも早くなります。
+         * もちろん、switch文である必要もあるのかも考える必要があるのですが
+         */
         if (requestCode == REQUEST_PERMISSION) {
             // 使用が許可された
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 cameraIntent();
+                /* ここでの return は不要 */
                 return;
 
             } else {
